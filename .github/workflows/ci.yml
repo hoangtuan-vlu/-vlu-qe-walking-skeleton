@@ -1,26 +1,31 @@
-name: Jest Unit Test
+name: Node.js CI
 
 on:
   push:
-    branches:
-      - main
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x] # Các phiên bản Node.js sẽ chạy test
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+    - name: Lấy mã nguồn (Checkout code)
+      uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
+    - name: Cài đặt Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
 
-      - name: Install dependencies
-        run: npm install
+    - name: Cài đặt các gói phụ thuộc (Install dependencies)
+      run: npm ci
 
-      - name: Run Jest tests
-        run: npm test
+    - name: Chạy Unit Test (Run Jest)
+      run: npm test
