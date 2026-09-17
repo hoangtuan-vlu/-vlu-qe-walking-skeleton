@@ -1,13 +1,19 @@
-const login = require("./login");
+const checkLogin = require('./auth');
 
-test("Đăng nhập đúng username và password", () => {
-    expect(login("admin", "123")).toBe(true);
-});
+describe('Kiểm tra hàm đăng nhập (checkLogin)', () => {
+    test('Trả về true khi nhập đúng tài khoản và mật khẩu (admin / 123)', () => {
+        expect(checkLogin('admin', '123')).toBe(true);
+    });
 
-test("Đăng nhập sai password", () => {
-    expect(login("admin", "456")).toBe(false);
-});
+    test('Trả về false khi nhập sai mật khẩu', () => {
+        expect(checkLogin('admin', 'wrongpassword')).toBe(false);
+    });
 
-test("Đăng nhập sai username", () => {
-    expect(login("user", "123")).toBe(false);
+    test('Trả về false khi nhập sai tên đăng nhập', () => {
+        expect(checkLogin('user123', '123')).toBe(false);
+    });
+
+    test('Trả về false khi để trống cả hai', () => {
+        expect(checkLogin('', '')).toBe(false);
+    });
 });
